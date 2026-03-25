@@ -1,0 +1,17 @@
+{
+  "name": "დათვლა 6 მაისამდე",
+  "short_name": "Till 6",
+  "description": "Countdown timer to May 6, 2026",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<meta name="description" content="Countdown timer to May 6, 2026">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon.svg">
 <title>დათვლა 6 მაისამდე</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,12 +58,32 @@
     color: #34d399;
     font-weight: 600;
   }
+  #install-btn {
+    margin-top: 2.5rem;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 10px;
+    background: #3b82f6;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+  #install-btn:hover {
+    background: #2563eb;
+  }
+  #install-btn.hidden {
+    display: none;
+  }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>დარჩენილი დრო 6 მაისამდე, 2026</h1>
   <div class="units" id="countdown"></div>
+  <button id="install-btn" class="hidden">📲 Install App</button>
 </div>
 <script>
   const target = new Date('2026-05-06T00:00:00');
@@ -84,6 +109,32 @@
 
   update();
   setInterval(update, 1000);
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  let deferredPrompt;
+  const installBtn = document.getElementById('install-btn');
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.classList.remove('hidden');
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.classList.add('hidden');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    installBtn.classList.add('hidden');
+    deferredPrompt = null;
+  });
 </script>
 </body>
 </html>
